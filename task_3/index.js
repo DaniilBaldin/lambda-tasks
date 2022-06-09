@@ -8,11 +8,12 @@ const { program } = require("commander");
 program
   .command("message")
   .alias("m")
-  .description("Message to send to telegram Bot")
+  .description("Write here message to Telegram Bot")
   .argument("string", "message to send")
-  .action((message) => {
-    bot.sendMessage(384138295, message);
+  .action(async (message) => {
+    await bot.sendMessage(384138295, message);
     console.log("Message was successfully sent!");
+    process.exit(0);
   });
 
 program
@@ -22,8 +23,8 @@ program
     "Write correct path to photo or just drag and drop photo to console to send it to Telegram Bot"
   )
   .argument("path", "photo to send")
-  .action((photo) => {
-    bot.sendPhoto(384138295, photo);
+  .action(async (photo) => {
+    await bot.sendPhoto(384138295, photo);
     console.log("Photo was successfully sent!");
     process.exit(0);
   });
