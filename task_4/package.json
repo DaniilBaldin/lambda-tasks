@@ -1,0 +1,24 @@
+{
+  "name": "lambda-tasks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DaniilBaldin/lambda-tasks.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DaniilBaldin/lambda-tasks/issues"
+  },
+  "homepage": "https://github.com/DaniilBaldin/lambda-tasks#readme",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "node-telegram-bot-api": "^0.57.0"
+  }
+}
