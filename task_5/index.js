@@ -95,39 +95,3 @@ bot.onText(/Forecast every 6 hours./, (msg, match) => {
   const chatId = msg.chat.id;
   getWeatherSix(chatId, match);
 });
-
-/*
-const weatherTemplate = (city, list) => {
-  let weather = `Погода в г. ${city}:
-   ${list[0].dt_txt}: +${Math.trunc(
-    list[0].main.temp
-  )}°C, ощущается как: +${Math.trunc(list[0].main.feels_like)}°C, ${
-    list[1].weather[0].description
-  }.
-   ${list[1].dt_txt}: +${Math.trunc(
-    list[1].main.temp
-  )}°C, ощущается как: +${Math.trunc(list[1].main.feels_like)}°C, ${
-    list[1].weather[0].description
-  }.
-  `;
-  return weather;
-};
-
-const getWeather = (chatId, msg) => {
-  const endPoint = weatherEndpoint;
-  axios.get(endPoint).then(
-    (resp) => {
-      const data = resp.data.list;
-      const city = resp.data.city.name;
-      const res = weatherTemplate(city, data);
-      console.log(res);
-
-      //   bot.sendMessage(chatId, res);
-    },
-    (error) => {
-      console.log("error", error);
-      bot.sendMessage(chatId, "Error");
-    }
-  );
-};
-*/
