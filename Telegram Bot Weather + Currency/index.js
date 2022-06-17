@@ -35,9 +35,6 @@ const getPrivatCurrency = (chatId, msg) => {
 const getMonoCurrency = (chatId, msg) => {
   const endpoint = monoEndpoint;
   let monoCurr = [];
-  // axios.get(endpoint).then((resp) => {
-  //   console.log(resp.headers);
-  // });
   setInterval(() => {
     axios
       .get(endpoint)
@@ -51,7 +48,6 @@ const getMonoCurrency = (chatId, msg) => {
   }, 61000);
   const res = fs.readFileSync("./mono.json", "utf-8");
   const finalRes = JSON.parse(res);
-  // console.log(finalRes);
   const monoCurrency = `${date.toLocaleString()}.\nMonobank actual currency is: \nUSD: Buy:${parseFloat(
     finalRes[1].rateBuy
   ).toFixed(2)}; Sell:${parseFloat(finalRes[1].rateSell).toFixed(2)} \nEUR: Buy:${parseFloat(
