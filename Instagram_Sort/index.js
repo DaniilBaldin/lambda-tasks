@@ -51,7 +51,6 @@ async function isInEveryFile() {
 }
 
 async function isInTenFiles() {
-    console.time();
     try {
         let result = [];
         for (let i = 0; i < 20; i++) {
