@@ -7,20 +7,16 @@ async function uniqueValues() {
         for (let i = 0; i < 20; i++) {
             const duplicates = await fs.readFileSync(`./src/out${i}.txt`, 'utf-8');
             const unique = new Set(duplicates.split('\n'));
-            result.push(unique.size);
+            result.push(unique);
         }
-        let sumResult = 0;
-        for (let item in result) {
-            sumResult += result[item];
-        }
-        console.log(`Unique values in all files: ${sumResult}`);
+        const uniqueElements = new Set(result.reduce((a, c) => a.concat([...c]), []));
+        console.log(`Unique values in all files: ${uniqueElements.size}`);
     } catch {
         (err) => {
             if (err) console.log(err.message);
         };
     }
 }
-
 async function isInEveryFile() {
     try {
         let result = [];
