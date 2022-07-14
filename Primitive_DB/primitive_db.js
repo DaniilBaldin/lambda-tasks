@@ -43,6 +43,7 @@ const searchQuestion = () => {
 
 const searchUser = () => {
     let usersDB = fs.readFileSync('database.txt', 'utf-8');
+    console.log(usersDB);
     inquirer
         .prompt({
             type: 'input',
@@ -55,7 +56,6 @@ const searchUser = () => {
                 .filter((e) => e !== '')
                 .map(JSON.parse);
             let u = Object.values(answer);
-            console.log(u);
             let res = result.filter((e) => u.includes(e.Name));
             if (res.length) {
                 console.log(`User "${u}" is found! Search result:`);
