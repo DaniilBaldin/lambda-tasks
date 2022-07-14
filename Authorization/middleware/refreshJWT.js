@@ -1,5 +1,6 @@
+const path = require('path');
 require('dotenv').config({
-    path: '/home/daniil/Projects-javascript/lambda-tasks/Authorization/.env',
+    path: path.join(__dirname, '../', '.env'),
 });
 const jwt = require('jsonwebtoken');
 const REFRESH_TOKEN = process.env.TOKEN_REFRESH;

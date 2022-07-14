@@ -1,10 +1,15 @@
+const path = require('path');
+require('dotenv').config({
+    path: path.join(__dirname, '../', '.env'),
+});
+const DB_URL = process.env.DB_URL;
 const mongodb = require('mongodb');
 const mongoClient = mongodb.MongoClient;
 
 let db;
 
 exports.database = mongoClient
-    .connect('mongodb+srv://DanielBaldin:rw8Q1JAzBITWwVKo@cluster0.b4q08.mongodb.net/?retryWrites=true&w=majority')
+    .connect(DB_URL)
     .then((client) => {
         console.log('Connected!');
         db = client.db('database1');
