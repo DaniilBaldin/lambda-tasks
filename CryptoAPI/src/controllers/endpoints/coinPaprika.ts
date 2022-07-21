@@ -1,0 +1,30 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import axios, { AxiosResponse } from 'axios';
+import Coin from '../../models/coins';
+const api_endpoint = 'https://api.coinpaprika.com/v1/ticker?limit=20';
+
+// eslint-disable-next-line no-async-promise-executor
+const endpoint = async () => {
+    try {
+        await axios.get(api_endpoint).then((response: AxiosResponse) => {
+            const respData = response.data;
+            for (let i = 0; i < 20; i++) {
+                const shop = 'CoinPaprika';
+                const short = respData[i].symbol;
+                const price = respData[i].price_usd;
+                const date = new Date().toLocaleDateString();
+                const time = new Date().toLocaleTimeString();
+                const coin = new Coin(shop, short, price, date, time);
+                coin.save()
+                    .then(() => {})
+                    .catch((err) => {
+                        console.log(err.message);
+                    });
+            }
+        });
+    } catch (err) {
+        console.log((err as Error).message);
+    }
+};
+
+export default endpoint;
