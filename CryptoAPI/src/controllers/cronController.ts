@@ -13,7 +13,7 @@ const getEndpoints = () => {
             coinPaprika();
             CoinStats();
             kuCoin();
-            console.log('Saved!');
+            console.log(`Saved! ${new Date().toLocaleTimeString()}`);
         } catch (err) {
             console.log((err as Error).message);
         }
