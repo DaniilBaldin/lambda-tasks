@@ -45,6 +45,7 @@ const monoData = () => {
             });
     }, 61000);
 };
+monoData();
 
 const getMonoCurrency = async (chatId, msg) => {
     try {
@@ -54,7 +55,6 @@ const getMonoCurrency = async (chatId, msg) => {
         )}; Sell:${parseFloat(finalRes[1].rateSell).toFixed(2)} \nEUR: Buy:${parseFloat(finalRes[2].rateBuy).toFixed(2)}; Sell:${parseFloat(
             finalRes[2].rateSell
         ).toFixed(2)}`;
-        console.log(monoCurrency);
         bot.sendMessage(chatId, monoCurrency, {
             parse_mode: 'HTML',
         });
@@ -186,4 +186,3 @@ setInterval(() => {
         client.send(new Date().toTimeString());
     });
 }, 1000);
-monoData();
