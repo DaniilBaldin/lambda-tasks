@@ -15,18 +15,14 @@ const endpoint = async () => {
             })
             .then((response: AxiosResponse) => {
                 const respData = response.data.data;
-                respData.forEach((e: any) => {
+                respData.forEach(async (e: any) => {
                     const shop = 'CoinMarketCap';
                     const short = e.symbol;
                     const price = e.quote.USD.price;
                     const date = new Date().toLocaleDateString();
                     const time = new Date().toLocaleTimeString();
                     const coin = new Coin(shop, short, price, date, time);
-                    coin.save()
-                        .then(() => {})
-                        .catch((err) => {
-                            console.log(err.message);
-                        });
+                    await coin.save();
                 });
             });
     } catch (err) {

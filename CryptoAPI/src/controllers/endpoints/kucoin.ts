@@ -7,23 +7,19 @@ const api_endpoint = 'https://api.kucoin.com/api/v1/prices';
 // eslint-disable-next-line no-async-promise-executor
 const endpoint = async () => {
     try {
-        await axios.get(api_endpoint).then((response: AxiosResponse) => {
+        await axios.get(api_endpoint).then(async (response: AxiosResponse) => {
             const respData = response.data.data;
-            for (const i in respData) {
+            for (let i in respData) {
                 const priceCoin = respData[i];
-                coins.forEach((el) => {
-                    if (el === i) {
+                coins.forEach(async (e) => {
+                    if (e === i) {
                         const shop = 'Kucoin';
                         const short = i;
                         const price = priceCoin;
                         const date = new Date().toLocaleDateString();
                         const time = new Date().toLocaleTimeString();
                         const coin = new Coin(shop, short, price, date, time);
-                        coin.save()
-                            .then(() => {})
-                            .catch((err) => {
-                                console.log(err.message);
-                            });
+                        await coin.save();
                     }
                 });
             }

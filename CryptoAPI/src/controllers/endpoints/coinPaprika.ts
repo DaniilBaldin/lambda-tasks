@@ -6,7 +6,7 @@ const api_endpoint = 'https://api.coinpaprika.com/v1/ticker?limit=20';
 // eslint-disable-next-line no-async-promise-executor
 const endpoint = async () => {
     try {
-        await axios.get(api_endpoint).then((response: AxiosResponse) => {
+        await axios.get(api_endpoint).then(async (response: AxiosResponse) => {
             const respData = response.data;
             for (let i = 0; i < 20; i++) {
                 const shop = 'CoinPaprika';
@@ -15,11 +15,7 @@ const endpoint = async () => {
                 const date = new Date().toLocaleDateString();
                 const time = new Date().toLocaleTimeString();
                 const coin = new Coin(shop, short, price, date, time);
-                coin.save()
-                    .then(() => {})
-                    .catch((err) => {
-                        console.log(err.message);
-                    });
+                await coin.save();
             }
         });
     } catch (err) {

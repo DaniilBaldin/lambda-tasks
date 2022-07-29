@@ -8,18 +8,14 @@ const endpoint = async () => {
     try {
         await axios.get(api_endpoint).then((response: AxiosResponse) => {
             const respData = response.data.coins;
-            respData.forEach((e: any) => {
+            respData.forEach(async (e: any) => {
                 const shop = 'CoinStats';
                 const short = e.symbol;
                 const price = e.price;
                 const date = new Date().toLocaleDateString();
                 const time = new Date().toLocaleTimeString();
                 const coin = new Coin(shop, short, price, date, time);
-                coin.save()
-                    .then(() => {})
-                    .catch((err) => {
-                        console.log(err.message);
-                    });
+                await coin.save();
             });
         });
     } catch (err) {
