@@ -1,0 +1,131 @@
+import axios, { AxiosResponse } from 'axios';
+import dotenv from 'dotenv';
+dotenv.config();
+
+import Coin from '../../models/coins';
+import Users from '../../models/users';
+
+const { BOT_TOKEN } = process.env;
+const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}`;
+
+const findByCoin = (chatId: number, text: string, userName: string) => {
+    if (text[0] === '/') {
+        let coin = text
+            .split('')
+            .map((e: any) => (e !== '/' ? e : ''))
+            .join('');
+        axios
+            .post(`${TELEGRAM_API}/sendMessage`, {
+                chat_id: chatId,
+                text: `For what market do you want to see actual prices?`,
+                reply_markup: {
+                    keyboard: [
+                        [`coinBase(${coin})`, `coinMarketCap(${coin})`],
+                        [`coinPaprika(${coin})`, `coinStats(${coin})`],
+                        [`kuCoin(${coin})`, '/help'],
+                    ],
+                },
+            })
+            .then((response: AxiosResponse) => {
+                console.log('Message sent!');
+            })
+            .catch((err) => {
+                console.log((err as Error).message);
+            });
+    } else {
+        const market = text.split('(')[0];
+        const short = text
+            .split('(')[1]
+            .split('')
+            .map((e: string) => (e !== ')' ? e : ''))
+            .join('');
+        let temp: any = [];
+        Coin.findByTime(market, short)
+            .then(([coin]) => {
+                let result: any = coin;
+                result = result.reverse();
+                let period30min: number = 0;
+                let period1hour: number = 0;
+                let period3hours: number = 0;
+                let period6hours: number = 0;
+                let period12hours: number = 0;
+                let period1day: number = 0;
+                for (let index = 0; index < 6; index++) {
+                    period30min += Number(result[index].price);
+                }
+                period30min = period30min / 6;
+                temp.push(`\n30 minutes: $${period30min.toFixed(5)}`);
+                for (let index = 0; index < 12; index++) {
+                    period1hour += Number(result[index].price);
+                }
+                period1hour = period1hour / 12;
+                temp.push(`\n1 hour: $${period1hour.toFixed(5)}`);
+                for (let index = 0; index < 36; index++) {
+                    period3hours += Number(result[index].price);
+                }
+                period3hours = period3hours / 36;
+                temp.push(`\n3 hours: $${period3hours.toFixed(5)}`);
+                for (let index = 0; index < 72; index++) {
+                    period6hours += Number(result[index].price);
+                }
+                period6hours = period6hours / 72;
+                temp.push(`\n6 hours: $${period6hours.toFixed(5)}`);
+                for (let index = 0; index < 144; index++) {
+                    period12hours += Number(result[index].price);
+                }
+                period12hours = period12hours / 144;
+                temp.push(`\n12 hours: $${period12hours.toFixed(5)}`);
+                for (let index = 0; index < result.length; index++) {
+                    period1day += Number(result[index].price);
+                }
+                period1day = period1day / result.length;
+                temp.push(`\n1 day: $${period1day.toFixed(5)}.`);
+            })
+            .then((resp) => {
+                Users.find(userName, short, market).then(async ([user]) => {
+                    const findUser: any = user;
+                    if (findUser.length === 0) {
+                        axios
+                            .post(`${TELEGRAM_API}/sendMessage`, {
+                                chat_id: chatId,
+                                text: `Average prices on /${market} for coin /${short}: \n${[
+                                    ...temp,
+                                ]} \n\nDo you wish to add this coin to favorites?`,
+                                reply_markup: {
+                                    inline_keyboard: [[{ text: 'Add to favorites!', callback_data: 'Add to favorites!' }]],
+                                },
+                            })
+                            .catch((err) => {
+                                console.log((err as Error).message);
+                            });
+                    } else {
+                        axios
+                            .post(`${TELEGRAM_API}/sendMessage`, {
+                                chat_id: chatId,
+                                text: `Average prices on /${market} for coin /${short}: \n${[
+                                    ...temp,
+                                ]} \n\nThis coin is in your favorites. Delete it from favorites?`,
+                                reply_markup: {
+                                    inline_keyboard: [[{ text: 'Delete!', callback_data: 'Delete!' }]],
+                                },
+                            })
+                            .catch((err) => {
+                                console.log((err as Error).message);
+                            });
+                    }
+                });
+            })
+            .catch((err) => {
+                axios
+                    .post(`${TELEGRAM_API}/sendMessage`, {
+                        chat_id: chatId,
+                        text: `No prices found for coin ${short} on ${market}! Try another market.`,
+                    })
+                    .catch((err) => {
+                        console.log((err as Error).message);
+                    });
+            });
+    }
+};
+
+export default findByCoin;
