@@ -5,8 +5,8 @@ dotenv.config();
 const { BOT_TOKEN } = process.env;
 const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}`;
 
-const startMessage = (chatId: number, text: string) => {
-    axios
+const startMessage = async (chatId: number, text: string) => {
+    await axios
         .post(`${TELEGRAM_API}/sendMessage`, {
             chat_id: chatId,
             text: `Hello, ${text}. Please send request with '/help' route to see all available commands.`,

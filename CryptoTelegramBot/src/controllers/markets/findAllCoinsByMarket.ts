@@ -26,14 +26,14 @@ const findByMarket = (chatId: number, text: string) => {
                 }
                 response.forEach(async (e: any) => {
                     let message = `\nCoin: /${e.short} \nPrice: $${e.price}`;
-                    await temp.push(message);
+                    temp.push(message);
                 });
             } catch (err) {
                 console.log((err as Error).message);
             }
         })
-        .then((resp) => {
-            axios
+        .then(async (resp) => {
+            await axios
                 .post(`${TELEGRAM_API}/sendMessage`, {
                     chat_id: chatId,
                     text: `Last actual prices for /${market}: ${[...temp]} \n\nClick on coin name to see more detailed information.`,

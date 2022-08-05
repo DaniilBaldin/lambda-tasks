@@ -2,13 +2,12 @@ import axios, { AxiosResponse } from 'axios';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import Users from '../../models/users';
 
 const { BOT_TOKEN } = process.env;
 const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}`;
 
 const deleteFromFavAsk = async (chatId: number, coin: string, market: string, user: string) => {
-    axios
+    await axios
         .post(`${TELEGRAM_API}/sendMessage`, {
             chat_id: chatId,
             text: `Do you want to delete on /${market} coin /${coin} from favorites?`,

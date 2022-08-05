@@ -19,7 +19,7 @@ const deleteFromFav = async (chatId: number, message: string, text: string, user
         .map((e) => (e !== ':' ? e : ''))
         .join('');
     if (message === 'Delete!') {
-        await Users.delete(user, short, market).then(async ([resp]) => {
+        Users.delete(user, short, market).then(async ([resp]) => {
             await axios
                 .post(`${TELEGRAM_API}/sendMessage`, {
                     chat_id: chatId,

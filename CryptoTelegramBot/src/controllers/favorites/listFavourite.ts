@@ -9,7 +9,7 @@ const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}`;
 
 const listFavourite = async (chatId: number, user: string) => {
     const temp: any = [];
-    await Users.findAll(user)
+    Users.findAll(user)
         .then(async ([user]) => {
             const findUser: any = user;
             findUser.forEach((e: any) => {

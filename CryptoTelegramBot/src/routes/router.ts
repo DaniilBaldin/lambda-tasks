@@ -19,6 +19,10 @@ const router = Router();
 
 router.use(bodyParser.json());
 
+router.get('/', async (req, res) => {
+    res.status(200).send('Hello there!');
+});
+
 router.post(URI, async (req, res) => {
     try {
         let id = 0;
@@ -60,7 +64,7 @@ router.post(URI, async (req, res) => {
         } else {
             findByCoin(id, message, userName);
         }
-        res.status(200).send('Ok');
+        return res.status(200).send('Ok');
     } catch (err) {
         console.log(err as Error);
     }

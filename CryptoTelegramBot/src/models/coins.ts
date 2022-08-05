@@ -36,7 +36,7 @@ const coins = class Coins {
 
     static findByTime(market: string, short: string) {
         let date = new Date().toLocaleDateString();
-        return db.execute(`SELECT coins1.price FROM coins1 WHERE coins1.shop = ? AND coins1.short = ?`, [market, short]);
+        return db.execute(`SELECT coins1.price FROM coins1 WHERE coins1.shop = ? AND coins1.short = ? AND coins1.date = '${date}'`, [market, short]);
     }
 };
 

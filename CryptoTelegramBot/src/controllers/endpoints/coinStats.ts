@@ -13,7 +13,7 @@ const endpoint = async () => {
                 const date = new Date().toLocaleDateString();
                 const time = new Date().toLocaleTimeString();
                 const coin = new Coin(shop, short, price, date, time);
-                await coin.save()
+                await coin.save();
             });
         });
     } catch (err) {
