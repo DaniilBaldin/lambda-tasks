@@ -1,0 +1,196 @@
+org: danielb
+app: aws-s3-uploader
+service: aws-s3-uploader
+
+frameworkVersion: '3'
+
+custom:
+    bucketName: aws-s3-imageuploader
+
+provider:
+    name: aws
+    runtime: nodejs14.x
+    stage: dev
+    environment:
+        user_pool_id: { Ref: UserPool }
+        client_id: { Ref: UserClient }
+        DYNAMO_TABLE_NAME_USERS: users
+        DYNAMO_TABLE_NAME_IMAGES: images
+
+    iam:
+        role:
+            statements:
+                - Effect: Allow
+                  Action:
+                      - cognito-idp:AdminInitiateAuth
+                      - cognito-idp:AdminCreateUser
+                      - cognito-idp:AdminSetUserPassword
+                  Resource: '*'
+
+                - Effect: Allow
+                  Action:
+                      - dynamodb:Query
+                      - dynamodb:Scan
+                      - dynamodb:GetItem
+                      - dynamodb:PutItem
+                      - dynamodb:UpdateItem
+                      - dynamodb:DeleteItem
+                  Resource:
+                      - arn:aws:dynamodb:us-east-1:422326611836:table/users
+
+                - Effect: Allow
+                  Action:
+                      - dynamodb:Query
+                      - dynamodb:Scan
+                      - dynamodb:GetItem
+                      - dynamodb:PutItem
+                      - dynamodb:UpdateItem
+                      - dynamodb:DeleteItem
+                  Resource:
+                      - arn:aws:dynamodb:us-east-1:422326611836:table/images
+
+                - Effect: Allow
+                  Action:
+                      - s3:PutObject
+                      - s3:PutObjectACL
+                  Resource: '*'
+
+functions:
+    loginUser:
+        handler: dist/controllers/login.login
+        events:
+            - http:
+                  path: user/login
+                  method: post
+                  cors: true
+
+    signupUser:
+        handler: dist/controllers/signUp.signUp
+        events:
+            - http:
+                  path: user/signup
+                  method: post
+                  cors: true
+
+    UploadToS3:
+        handler: dist/controllers/uploadToS3.handler
+        events:
+            - http:
+                  path: user/upload
+                  method: post
+                  cors: true
+                  authorizer:
+                      name: PrivateAuthorizer
+                      type: COGNITO_USER_POOLS
+                      arn:
+                          Fn::GetAtt:
+                              - UserPool
+                              - Arn
+                      claims:
+                          - email
+
+    ListAllImages:
+        handler: dist/controllers/listAllImages.handler
+        events:
+            - http:
+                  path: user/allimages
+                  method: post
+                  cors: true
+                  authorizer:
+                      name: PrivateAuthorizer
+                      type: COGNITO_USER_POOLS
+                      arn:
+                          Fn::GetAtt:
+                              - UserPool
+                              - Arn
+                      claims:
+                          - email
+
+    DeleteImage:
+        handler: dist/controllers/deleteImage.handler
+        events:
+            - http:
+                  path: user/delete
+                  method: post
+                  cors: true
+                  authorizer:
+                      name: PrivateAuthorizer
+                      type: COGNITO_USER_POOLS
+                      arn:
+                          Fn::GetAtt:
+                              - UserPool
+                              - Arn
+                      claims:
+                          - email
+
+resources:
+    Resources:
+        UserPool:
+            Type: AWS::Cognito::UserPool
+            Properties:
+                UserPoolName: s3-imageuploader-pool
+                Schema:
+                    - Name: email
+                      Required: true
+                      Mutable: true
+                Policies:
+                    PasswordPolicy:
+                        MinimumLength: 6
+                AutoVerifiedAttributes: ['email']
+
+        UserClient:
+            Type: AWS::Cognito::UserPoolClient
+            Properties:
+                ClientName: s3-imageuploader
+                GenerateSecret: false
+                UserPoolId: { Ref: UserPool }
+                AccessTokenValidity: 5
+                IdTokenValidity: 5
+                ExplicitAuthFlows:
+                    - 'ADMIN_NO_SRP_AUTH'
+
+        UsersDynamoDbTable:
+            Type: AWS::DynamoDB::Table
+            DeletionPolicy: Retain
+            Properties:
+                AttributeDefinitions:
+                    - AttributeName: email
+                      AttributeType: S
+                KeySchema:
+                    - AttributeName: email
+                      KeyType: HASH
+                ProvisionedThroughput:
+                    ReadCapacityUnits: 1
+                    WriteCapacityUnits: 1
+                TableName: ${self:provider.environment.DYNAMO_TABLE_NAME_USERS}
+
+        ImagesDynamoDbTable:
+            Type: AWS::DynamoDB::Table
+            DeletionPolicy: Retain
+            Properties:
+                AttributeDefinitions:
+                    - AttributeName: id
+                      AttributeType: S
+                KeySchema:
+                    - AttributeName: id
+                      KeyType: HASH
+                ProvisionedThroughput:
+                    ReadCapacityUnits: 1
+                    WriteCapacityUnits: 1
+                TableName: ${self:provider.environment.DYNAMO_TABLE_NAME_IMAGES}
+
+        ImageS3Bucket:
+            Type: AWS::S3::Bucket
+            Properties:
+                BucketName: ${self:custom.bucketName}
+                AccessControl: PublicRead
+                CorsConfiguration:
+                    CorsRules:
+                        - AllowedHeaders:
+                              - '*'
+                          AllowedMethods:
+                              - GET
+                              - PUT
+                              - HEAD
+                          AllowedOrigins:
+                              - '*'
