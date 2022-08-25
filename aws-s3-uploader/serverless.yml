@@ -35,8 +35,7 @@ provider:
                       - dynamodb:PutItem
                       - dynamodb:UpdateItem
                       - dynamodb:DeleteItem
-                  Resource:
-                      - arn:aws:dynamodb:us-east-1:422326611836:table/users
+                  Resource: '*'
 
                 - Effect: Allow
                   Action:
@@ -46,8 +45,7 @@ provider:
                       - dynamodb:PutItem
                       - dynamodb:UpdateItem
                       - dynamodb:DeleteItem
-                  Resource:
-                      - arn:aws:dynamodb:us-east-1:422326611836:table/images
+                  Resource: '*'
 
                 - Effect: Allow
                   Action:
