@@ -1,0 +1,21 @@
+{
+  "name": "aws-redistribution",
+  "version": "1.0.0",
+  "description": "Serverless Framework Node SQS Producer-Consumer on AWS",
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.102",
+    "@types/k6": "^0.37.1",
+    "@typescript-eslint/eslint-plugin": "^5.35.1",
+    "@typescript-eslint/parser": "^5.35.1",
+    "eslint": "^8.23.0",
+    "k6": "^0.0.0",
+    "serverless-lift": "^1.1.2"
+  },
+  "dependencies": {
+    "aws-lambda": "^1.0.7",
+    "dotenv": "^16.0.1",
+    "mysql2": "^2.3.3"
+  }
+}
