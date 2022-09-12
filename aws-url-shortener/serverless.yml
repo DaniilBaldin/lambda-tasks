@@ -1,0 +1,22 @@
+org: danielb
+app: aws-url-shortener
+service: aws-url-shortener
+
+frameworkVersion: '3'
+
+custom:
+    bucketName: aws-url-shortener
+
+provider:
+    name: aws
+    runtime: nodejs14.x
+    stage: dev
+
+functions:
+    shortUrl:
+        handler: dist/handler.handler
+        events:
+            - http:
+                  path: short
+                  method: post
+                  cors: true

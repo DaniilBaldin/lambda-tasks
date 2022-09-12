@@ -1,0 +1,18 @@
+{
+  "name": "aws-url-shortener",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "express": "^4.17.1",
+    "prettylink": "^1.0.0",
+    "serverless-http": "^2.7.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.103",
+    "@types/express": "^4.17.13",
+    "@types/node": "^18.7.16",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
+    "eslint": "^8.23.1"
+  }
+}
