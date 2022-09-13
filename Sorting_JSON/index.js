@@ -1,5 +1,5 @@
 const axios = require('axios');
-const endpoints = require('./src/endpoints');
+const endpoints = require('./data/endpoints');
 
 let trueVal = [];
 falseVal = [];
