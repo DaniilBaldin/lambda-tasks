@@ -1,3 +1,4 @@
 /node_modules
 .env
-/googleCred.json
+.gitignore
+/src/listia-osen-makro.jpg
