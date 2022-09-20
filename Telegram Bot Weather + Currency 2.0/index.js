@@ -57,7 +57,6 @@ bot.onText(/Privatbank actual currency./, (msg) => {
 bot.onText(/Monobank actual currency./, (msg, match) => {
     const chatId = msg.chat.id;
     getMonoCurrency().then((result) => {
-        console.log(result);
         bot.sendMessage(chatId, result, {
             parse_mode: 'HTML',
         });
